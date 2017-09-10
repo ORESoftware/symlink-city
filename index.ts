@@ -11,9 +11,7 @@ export interface SCResult {
 }
 
 import os = require('os');
-
 let isWin = os.platform() === 'win32';
-
 if (isWin) {
   console.error(' => symlink-city is not designed to work for Windows, only MacOS and *nix.');
   process.exit(1);
@@ -21,7 +19,6 @@ if (isWin) {
 
 import util = require('util');
 import fs = require('fs');
-
 const {findProjectRoot} = require('residence');
 const root = findProjectRoot(process.cwd());
 
@@ -159,11 +156,9 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
   }
 
   const emptyStr = '';
-  console.log(emptyStr);
-  console.error(emptyStr);
+  console.log(emptyStr);console.error(emptyStr);
   log(chalk.blue.bold('run has completed, here are the results:'));
-  console.log(emptyStr);
-  console.error(emptyStr);
+  console.log(emptyStr); console.error(emptyStr);
 
   {
 
@@ -176,6 +171,10 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
       flip && ((flip = false) || log('the following folders were successfully realized:'));
       log(util.inspect({originalPath, linkPath}))
     });
+
+    if(flip){
+      log(chalk.red('no symlinks were successfully converted to hardlinks.'));
+    }
 
   }
 
@@ -197,13 +196,11 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
 
     let flip = true;
 
-    results.filter(function (val) {
-      return !val.cpExitCode;
-    })
-    .forEach(function (val) {
-      flip && ((flip = false) || log(chalk.yellow.bold('The following folders did not need to be realized:')));
-      console.log('\n', util.inspect(val));
+    let noNeed = results.filter(function (val) {
+      return !('cpExitCode' in val);
     });
+
+    log(chalk.bold(`${noNeed.length} folders were not symlinks.`));
 
   }
 

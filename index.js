@@ -128,6 +128,9 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
             flip_1 && ((flip_1 = false) || log('the following folders were successfully realized:'));
             log(util.inspect({ originalPath: originalPath, linkPath: linkPath }));
         });
+        if (flip_1) {
+            log(chalk.red('no symlinks were successfully converted to hardlinks.'));
+        }
     }
     {
         var flip_2 = true;
@@ -140,13 +143,10 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
         });
     }
     {
-        var flip_3 = true;
-        results.filter(function (val) {
-            return !val.cpExitCode;
-        })
-            .forEach(function (val) {
-            flip_3 && ((flip_3 = false) || log(chalk.yellow.bold('The following folders did not need to be realized:')));
-            console.log('\n', util.inspect(val));
+        var flip = true;
+        var noNeed = results.filter(function (val) {
+            return !('cpExitCode' in val);
         });
+        log(chalk.bold(noNeed.length + " folders were not symlinks."));
     }
 });
