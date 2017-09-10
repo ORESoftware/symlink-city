@@ -1,0 +1,26 @@
+# all files
+*.sh
+*.ts
+*.md
+*.txt
+*.log
+*.json
+*.yml
+
+# directories
+.idea
+node_modules
+coverage/
+yarn.lock
+test/
+suman.conf.js
+
+# files
+.npmignore
+.gitignore
+.github
+.gitattributes
+.editorconfig
+
+# negation
+!*.d.ts

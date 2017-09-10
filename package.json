@@ -1,0 +1,45 @@
+{
+  "name": "symlink-city",
+  "version": "0.0.101",
+  "description": "Turn all symlinked files and directories in node_modules into real files/folders (for Docker, etc.). ",
+  "main": "index.js",
+  "typings": "index.d.ts",
+  "types": "index.d.ts",
+  "bin": {
+    "symlinkcity": "index.js"
+  },
+  "scripts": {
+    "test": "suman"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ORESoftware/symlink-city.git"
+  },
+  "keywords": [
+    "symlink",
+    "readlink",
+    "docker",
+    "node_modules",
+    "copy",
+    "install",
+    "container",
+    "virtual"
+  ],
+  "author": "Olegzandr VD",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ORESoftware/symlink-city/issues"
+  },
+  "homepage": "https://github.com/ORESoftware/symlink-city#readme",
+  "devDependencies": {
+    "@types/chalk": "^0.4.31",
+    "@types/core-js": "^0.9.43",
+    "@types/node": "^8.0.28"
+  },
+  "dependencies": {
+    "@types/async": "^2.0.42",
+    "async": "^2.5.0",
+    "chalk": "^2.1.0",
+    "residence": "0.0.205"
+  }
+}
