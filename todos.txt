@@ -1,0 +1,27 @@
+const k = cp.spawn('bash');
+
+k.stdin.write('\n');
+k.stdin.write(`cp -r ${rlp} ${rp}`);
+
+process.nextTick(function () {
+    k.stdin.end('\n');
+});
+
+let stderr = '';
+
+k.stderr.on('data', function (d) {
+    stderr += String(d);
+});
+
+k.once('exit', function (code) {
+
+    cb(null, {
+      cpExitCode: code,
+      originalPath: rp,
+      stderr: stderr,
+      linkPath: rlp,
+      isSymbolicLink: true,
+      isDirectory: false
+    });
+
+});

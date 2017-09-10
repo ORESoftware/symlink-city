@@ -50,6 +50,8 @@ let wrap = function (cb: Function, fn: Function) {
   }
 };
 
+console.log('\n');
+log('symlink-city is starting a new run.');
 log(`${topLevelDirectories.length} files/folders found in 'node_modules' dir at path ${chalk.magenta(nm)}.`);
 
 async.mapLimit(topLevelDirectories, 3, function (item, cb) {
@@ -72,8 +74,7 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
       fs.readlink(rp, function (err, linkStr) {
         if (err) return cb(err);
 
-        let rlp = path.resolve(nm + '/' +  linkStr);
-
+        let rlp = path.isAbsolute(linkStr) ? linkStr : path.resolve(nm + '/' +  linkStr);
         log(`We were able to resolve symlink`);
         log(`Original path -> ${chalk.magenta.dim(rp)} -> resolved to ->  ${chalk.magenta(rlp)}`);
 
@@ -90,17 +91,17 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
           }
           else {
 
-            log(`unlinking the symlink at ${rp}`);
+            log(`unlinking the symlink at ${chalk.yellow(rp)}`);
 
             fs.unlink(rp, function (err) {
               if (err) return cb(err);
 
-              log(`we are now copying contents of ${chalk.magenta(rlp)} to  ${chalk.magenta(rp)}`);
+              log(`we are now linking ${chalk.magenta(rlp)} to  ${chalk.magenta(rp)}`);
 
               const k = cp.spawn('bash');
 
               k.stdin.write('\n');
-              k.stdin.write(`cp -r ${rlp} ${rp}`);
+              k.stdin.write(`hln ${rlp} ${rp}`);
 
               process.nextTick(function () {
                 k.stdin.end('\n');
