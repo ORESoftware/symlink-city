@@ -10,6 +10,14 @@ export interface SCResult {
   isDirectory: boolean
 }
 
+import os = require('os');
+
+let isWin = os.platform() === 'win32';
+
+if (isWin) {
+  console.error(' => symlink-city is not designed to work for Windows, only MacOS and *nix.');
+  process.exit(1);
+}
 
 import util = require('util');
 import fs = require('fs');
@@ -74,7 +82,7 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
       fs.readlink(rp, function (err, linkStr) {
         if (err) return cb(err);
 
-        let rlp = path.isAbsolute(linkStr) ? linkStr : path.resolve(nm + '/' +  linkStr);
+        let rlp = path.isAbsolute(linkStr) ? linkStr : path.resolve(nm + '/' + linkStr);
         log(`We were able to resolve symlink`);
         log(`Original path -> ${chalk.magenta.dim(rp)} -> resolved to ->  ${chalk.magenta(rlp)}`);
 
@@ -101,7 +109,14 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
               const k = cp.spawn('bash');
 
               k.stdin.write('\n');
-              k.stdin.write(`hln ${rlp} ${rp}`);
+
+              //create hardlink here
+              if (String(process.platform).toUpperCase() === 'DARWIN') {
+                k.stdin.write(`hln ${rlp} ${rp}`);
+              }
+              else {
+                k.stdin.write(`ln ${rlp} ${rp}`);
+              }
 
               process.nextTick(function () {
                 k.stdin.end('\n');
@@ -144,9 +159,11 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
   }
 
   const emptyStr = '';
-  console.log(emptyStr);console.error(emptyStr);
+  console.log(emptyStr);
+  console.error(emptyStr);
   log(chalk.blue.bold('run has completed, here are the results:'));
-  console.log(emptyStr); console.error(emptyStr);
+  console.log(emptyStr);
+  console.error(emptyStr);
 
   {
 

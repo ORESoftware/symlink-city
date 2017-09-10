@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
+var os = require("os");
+var isWin = os.platform() === 'win32';
+if (isWin) {
+    console.error(' => symlink-city is not designed to work for Windows, only MacOS and *nix.');
+    process.exit(1);
+}
 var util = require("util");
 var fs = require("fs");
 var findProjectRoot = require('residence').findProjectRoot;
@@ -73,7 +79,12 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
                             log("we are now linking " + chalk.magenta(rlp) + " to  " + chalk.magenta(rp));
                             var k = cp.spawn('bash');
                             k.stdin.write('\n');
-                            k.stdin.write("hln " + rlp + " " + rp);
+                            if (String(process.platform).toUpperCase() === 'DARWIN') {
+                                k.stdin.write("hln " + rlp + " " + rp);
+                            }
+                            else {
+                                k.stdin.write("ln " + rlp + " " + rp);
+                            }
                             process.nextTick(function () {
                                 k.stdin.end('\n');
                             });

@@ -11,6 +11,16 @@
 $ npm install -g symlink-city
 ```
 
+If you are on MacOS, you need to install this utility
+https://github.com/selkhateeb/hardlink
+
+like so:
+
+```bash
+$ brew install hardlink-osx
+```
+
+
 # Usage
 
 ```bash
