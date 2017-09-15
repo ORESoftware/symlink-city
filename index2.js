@@ -79,11 +79,7 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
                             log("we are now linking " + chalk.magenta(rlp) + " to  " + chalk.magenta(rp));
                             var k = cp.spawn('bash');
                             k.stdin.write('\n');
-                            var exclude = path.resolve(rlp + '/node_modules');
-                            console.log('excluded dir => ', exclude);
-                            console.log('source dir => ', rlp);
-                            console.log('dest dir => ', rp);
-                            k.stdin.write("rsync -a --exclude=" + exclude + " " + (rlp + '/*') + " " + rp + " ");
+                            k.stdin.write("ln " + rlp + " " + rp);
                             process.nextTick(function () {
                                 k.stdin.end('\n');
                             });
@@ -92,8 +88,6 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
                                 stderr += String(d);
                             });
                             k.once('exit', function (code) {
-                                console.log('exit code => ', code);
-                                console.log('stderr => ', stderr);
                                 cb(null, {
                                     cpExitCode: code,
                                     originalPath: rp,

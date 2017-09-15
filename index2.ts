@@ -109,19 +109,7 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
 
               k.stdin.write('\n');
 
-              // k.stdin.write(`ln ${rlp} ${rp}`);
-              let exclude = path.resolve(rlp + '/node_modules');
-              console.log('excluded dir => ', exclude);
-              console.log('source dir => ', rlp);
-              console.log('dest dir => ', rp);
-
-              // k.stdin.write('shopt -s extglob;\n');
-              // k.stdin.write(`cp -R !(node_modules/*) ${rlp} ${rp} `);
-              // k.stdin.write(`cp -r ${rlp} ${rp} `);
-
-              k.stdin.write(`rsync -a --exclude=${exclude} ${rlp + '/*'} ${rp} `);
-              //
-              // k.stdin.write('echo "dummy"')
+              k.stdin.write(`ln ${rlp} ${rp}`);
 
               process.nextTick(function () {
                 k.stdin.end('\n');
@@ -134,9 +122,6 @@ async.mapLimit(topLevelDirectories, 3, function (item, cb) {
               });
 
               k.once('exit', function (code) {
-
-                console.log('exit code => ', code);
-                console.log('stderr => ', stderr);
 
                 cb(null, {
                   cpExitCode: code,
